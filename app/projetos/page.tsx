@@ -1,38 +1,84 @@
 import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/PageHeader";
+import { projectStatusOptions, projectTypeOptions } from "@/lib/projectStatus";
 
-export default async function Page() {
-  const items = await prisma.project.findMany({ orderBy: { createdAt: "desc" }, take: 100 });
+export default async function Projetos() {
+  const projects = await prisma.project.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 100
+  });
 
   return (
     <>
-      <PageHeader title="Projetos" subtitle="Gestão de projetos" />
+      <PageHeader title="Projetos" subtitle="Cadastro integrado com financeiro, beneficiários, documentos e prestação de contas" />
+
+      <div className="alert">
+        Ao cadastrar um projeto com valor aprovado, o SOCIVUM deverá criar automaticamente um centro de custo, uma visão financeira e uma pasta documental do projeto.
+      </div>
+
       <div className="card">
-        <h2>Novo registro</h2>
+        <h2>Novo projeto</h2>
         <form className="form" action="/api/projetos" method="post">
           <div className="form-grid">
             <input name="name" placeholder="Nome do projeto" required />
-            <input name="source" placeholder="Fonte de recurso" />
-            <input name="budget" placeholder="Orçamento" type="number" step="0.01" />
-            <input name="received" placeholder="Recebido" type="number" step="0.01" />
-            <input name="status" placeholder="Status" />
-            <input name="startDate" placeholder="Início" type="date" />
-            <input name="endDate" placeholder="Fim" type="date" />
-            <textarea name="description" placeholder="Descrição" />
-            <textarea name="objectives" placeholder="Objetivos" />
+
+            <select name="source">
+              <option value="">Tipo / Fonte</option>
+              {projectTypeOptions.map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+
+            <input name="budget" placeholder="Valor aprovado" type="number" step="0.01" />
+            <input name="received" placeholder="Valor captado/recebido" type="number" step="0.01" />
+
+            <select name="status">
+              {projectStatusOptions.map((item) => (
+                <option key={item} value={item}>{item}</option>
+              ))}
+            </select>
+
+            <input name="startDate" type="date" />
+            <input name="endDate" type="date" />
           </div>
-          <button type="submit">Salvar</button>
+
+          <textarea name="description" placeholder="Descrição do projeto" />
+          <textarea name="objectives" placeholder="Objetivos, metas e público-alvo" />
+
+          <button type="submit">Salvar projeto</button>
         </form>
       </div>
 
       <div className="card">
-        <h2>Registros</h2>
+        <h2>Projetos cadastrados</h2>
         <table className="table">
-          <thead><tr><th>Nome do projeto</th><th>Fonte de recurso</th><th>Orçamento</th><th>Recebido</th><th>Status</th><th>Início</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Projeto</th>
+              <th>Tipo/Fonte</th>
+              <th>Valor aprovado</th>
+              <th>Captado</th>
+              <th>Saldo a captar</th>
+              <th>Status</th>
+            </tr>
+          </thead>
           <tbody>
-            {items.map((item: any) => (
-              <tr key={item.id}><td>{String(item.name ?? '')}</td><td>{String(item.source ?? '')}</td><td>{String(item.budget ?? '')}</td><td>{String(item.received ?? '')}</td><td>{String(item.status ?? '')}</td><td>{String(item.startDate ?? '')}</td></tr>
-            ))}
+            {projects.map((project) => {
+              const budget = project.budget || 0;
+              const received = project.received || 0;
+              const remaining = budget - received;
+
+              return (
+                <tr key={project.id}>
+                  <td>{project.name}</td>
+                  <td>{project.source}</td>
+                  <td>R$ {budget.toLocaleString("pt-BR")}</td>
+                  <td>R$ {received.toLocaleString("pt-BR")}</td>
+                  <td>R$ {remaining.toLocaleString("pt-BR")}</td>
+                  <td><span className="badge">{project.status || "Sem status"}</span></td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

@@ -1,36 +1,43 @@
-import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/PageHeader";
+import { reportTypes } from "@/lib/options";
 
-export default async function Page() {
-  const items = await prisma.reportTemplate.findMany({ orderBy: { createdAt: "desc" }, take: 100 });
-
+export default function Relatorios() {
   return (
     <>
-      <PageHeader title="Relatórios" subtitle="Relatórios customizados" />
-      <div className="card">
-        <h2>Novo registro</h2>
-        <form className="form" action="/api/relatorios" method="post">
-          <div className="form-grid">
-            <input name="name" placeholder="Nome" required />
-            <input name="module" placeholder="Módulo" />
-            <textarea name="filters" placeholder="Filtros" />
-            <input name="format" placeholder="Formato" />
-            <textarea name="notes" placeholder="Observações" />
-          </div>
-          <button type="submit">Salvar</button>
-        </form>
+      <PageHeader title="Relatórios" subtitle="Central de emissão de relatórios padronizados" />
+      <div className="alert">
+        Relatórios não devem ser preenchidos manualmente. O usuário escolhe o tipo, os filtros e o SOCIVUM gera o relatório.
       </div>
-
       <div className="card">
-        <h2>Registros</h2>
-        <table className="table">
-          <thead><tr><th>Nome</th><th>Módulo</th><th>Filtros</th><th>Formato</th><th>Observações</th></tr></thead>
-          <tbody>
-            {items.map((item: any) => (
-              <tr key={item.id}><td>{String(item.name ?? '')}</td><td>{String(item.module ?? '')}</td><td>{String(item.filters ?? '')}</td><td>{String(item.format ?? '')}</td><td>{String(item.notes ?? '')}</td></tr>
-            ))}
-          </tbody>
-        </table>
+        <h2>Gerar relatório</h2>
+        <div className="form-grid">
+          <select>
+            <option>Selecione o relatório</option>
+            {reportTypes.map((item) => <option key={item}>{item}</option>)}
+          </select>
+          <input type="date" />
+          <input type="date" />
+          <select>
+            <option>Todos os projetos</option>
+            <option>Projeto específico</option>
+            <option>Institucional</option>
+          </select>
+          <select>
+            <option>PDF</option>
+            <option>Excel</option>
+            <option>CSV</option>
+          </select>
+        </div>
+        <br />
+        <button type="button">Gerar relatório</button>
+      </div>
+      <div className="grid grid-3">
+        {reportTypes.map((item) => (
+          <div className="card" key={item}>
+            <h3>{item}</h3>
+            <p className="small">Relatório padronizado para análise, prestação de contas e gestão.</p>
+          </div>
+        ))}
       </div>
     </>
   );

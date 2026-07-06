@@ -1,38 +1,32 @@
-import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/PageHeader";
+import { priorityOptions } from "@/lib/options";
 
-export default async function Page() {
-  const items = await prisma.task.findMany({ orderBy: { createdAt: "desc" }, take: 100 });
-
+export default function Agenda() {
   return (
     <>
-      <PageHeader title="Agenda e Tarefas" subtitle="Compromissos, prazos e tarefas" />
+      <PageHeader title="Agenda e Tarefas" subtitle="Compromissos, prazos, tarefas e alertas" />
       <div className="card">
-        <h2>Novo registro</h2>
+        <h2>Nova tarefa/compromisso</h2>
         <form className="form" action="/api/agenda" method="post">
           <div className="form-grid">
             <input name="title" placeholder="Título" required />
-            <input name="date" placeholder="Data" type="date" />
-            <input name="time" placeholder="Hora" type="time" />
+            <input name="date" type="date" />
+            <input name="time" type="time" />
             <input name="responsible" placeholder="Responsável" />
-            <input name="priority" placeholder="Prioridade" />
-            <input name="status" placeholder="Status" />
-            <textarea name="notes" placeholder="Observações" />
+            <select name="priority">
+              <option value="">Prioridade</option>
+              {priorityOptions.map((item) => <option key={item} value={item}>{item}</option>)}
+            </select>
+            <select name="status">
+              <option>A fazer</option>
+              <option>Em andamento</option>
+              <option>Concluída</option>
+              <option>Cancelada</option>
+            </select>
           </div>
+          <textarea name="notes" placeholder="Observações" />
           <button type="submit">Salvar</button>
         </form>
-      </div>
-
-      <div className="card">
-        <h2>Registros</h2>
-        <table className="table">
-          <thead><tr><th>Título</th><th>Data</th><th>Hora</th><th>Responsável</th><th>Prioridade</th><th>Status</th></tr></thead>
-          <tbody>
-            {items.map((item: any) => (
-              <tr key={item.id}><td>{String(item.title ?? '')}</td><td>{String(item.date ?? '')}</td><td>{String(item.time ?? '')}</td><td>{String(item.responsible ?? '')}</td><td>{String(item.priority ?? '')}</td><td>{String(item.status ?? '')}</td></tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </>
   );

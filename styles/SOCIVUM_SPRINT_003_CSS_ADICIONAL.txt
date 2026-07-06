@@ -1,0 +1,38 @@
+ADICIONE AO FINAL DO ARQUIVO app/globals.css:
+
+.sidebar-group-button {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  text-align: left;
+  border-radius: 0;
+}
+
+.sidebar-group-button:hover {
+  background: rgba(255,255,255,0.12);
+}
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  background: #e8f3fb;
+  color: #064873;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 12px;
+}
+
+@media(max-width: 1100px) {
+  .workflow-grid {
+    grid-template-columns: 1fr;
+  }
+}

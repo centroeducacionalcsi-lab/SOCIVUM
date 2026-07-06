@@ -1,36 +1,33 @@
-import { prisma } from "@/lib/prisma";
 import { PageHeader } from "@/components/PageHeader";
+import {
+  accountabilityStatusOptions, activityStatusOptions, attendanceStatusOptions,
+  benefitOptions, organizationTypeOptions, priorityOptions, serviceOptions
+} from "@/lib/options";
+import { projectStatusOptions, projectTypeOptions } from "@/lib/projectStatus";
 
-export default async function Page() {
-  const items = await prisma.auditLog.findMany({ orderBy: { createdAt: "desc" }, take: 100 });
+const groups = [
+  ["Prioridades da agenda", priorityOptions],
+  ["Tipos de organização", organizationTypeOptions],
+  ["Tipos de atendimento/serviço", serviceOptions],
+  ["Tipos de benefício", benefitOptions],
+  ["Tipos de projeto", projectTypeOptions],
+  ["Status de projeto/captação", projectStatusOptions],
+  ["Status de atividade", activityStatusOptions],
+  ["Status de frequência", attendanceStatusOptions],
+  ["Status de prestação de contas", accountabilityStatusOptions]
+];
 
+export default function Configuracoes() {
   return (
     <>
-      <PageHeader title="Configurações e Segurança" subtitle="Usuários, permissões, auditoria e LGPD" />
-      <div className="card">
-        <h2>Novo registro</h2>
-        <form className="form" action="/api/configuracoes" method="post">
-          <div className="form-grid">
-            <input name="action" placeholder="Ação" required />
-            <input name="userName" placeholder="Usuário" />
-            <input name="module" placeholder="Módulo" />
-            <input name="ip" placeholder="IP" />
-            <textarea name="notes" placeholder="Observações" />
+      <PageHeader title="Configurações Gerais" subtitle="Listas padronizadas, parâmetros e regras do SOCIVUM" />
+      <div className="grid grid-2">
+        {groups.map(([title, items]) => (
+          <div className="card" key={String(title)}>
+            <h2>{title}</h2>
+            <ul>{(items as string[]).map((item) => <li key={item}>{item}</li>)}</ul>
           </div>
-          <button type="submit">Salvar</button>
-        </form>
-      </div>
-
-      <div className="card">
-        <h2>Registros</h2>
-        <table className="table">
-          <thead><tr><th>Ação</th><th>Usuário</th><th>Módulo</th><th>IP</th><th>Observações</th></tr></thead>
-          <tbody>
-            {items.map((item: any) => (
-              <tr key={item.id}><td>{String(item.action ?? '')}</td><td>{String(item.userName ?? '')}</td><td>{String(item.module ?? '')}</td><td>{String(item.ip ?? '')}</td><td>{String(item.notes ?? '')}</td></tr>
-            ))}
-          </tbody>
-        </table>
+        ))}
       </div>
     </>
   );
