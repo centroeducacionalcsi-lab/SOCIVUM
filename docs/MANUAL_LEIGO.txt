@@ -1,0 +1,18 @@
+SOCIVUM - Manual simples
+
+1. O arquivo ZIP é a pasta do sistema.
+2. Envie o ZIP ao desenvolvedor.
+3. O desenvolvedor vai abrir a pasta no Visual Studio Code.
+4. Depois vai executar os comandos de instalação.
+5. O sistema abrirá no navegador em http://localhost:3000.
+
+Comandos para o desenvolvedor:
+
+npm install
+cp .env.example .env
+npx prisma generate
+npx prisma db push
+npm run seed
+npm run dev
+
+Atenção: não usar dados reais antes de ativar segurança, login real, backup e LGPD.
