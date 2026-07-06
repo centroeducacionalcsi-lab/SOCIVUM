@@ -1,22 +1,14 @@
-SOCIVUM - Sprint 008 - Cadastro Inteligente de Projetos
+SOCIVUM - Sprint 009 - Motor Inteligente de Execução de Projetos
 
 Inclui:
-- Cadastro de projeto mais completo;
-- Status padronizados;
-- Tipo de edital/fonte padronizado;
-- Filial, unidade e território;
-- Valor aprovado, captado, executado e saldo;
-- Centro de custo;
-- Conta bancária;
-- Coordenador;
-- Equipe prevista;
-- Público-alvo;
-- Metas e indicadores;
-- Cronograma;
-- Oficinas/turmas previstas;
-- Ações/eventos previstos;
-- Prestação de contas;
-- Base para integração automática com financeiro.
+- Assistente de execução de projeto;
+- parâmetros para gerar turmas, oficinas, encontros, metas, frequência e cronograma;
+- painel de dashboard operacional do projeto;
+- checklist de documentos obrigatórios;
+- alertas e pendências;
+- modelos/templates de projeto;
+- duplicação conceitual de projeto;
+- base do motor de regras do SOCIVUM.
 
 COMO INSTALAR:
 1. Extraia este ZIP.
@@ -28,5 +20,5 @@ npm run dev
 
 Depois de testar:
 git add .
-git commit -m "Sprint 008 - Cadastro inteligente de projetos"
+git commit -m "Sprint 009 - Motor inteligente de execução de projetos"
 git push
